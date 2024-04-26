@@ -1,3 +1,4 @@
+from fire.views import ChartView
 from django.contrib import admin
 from django.urls import path
 

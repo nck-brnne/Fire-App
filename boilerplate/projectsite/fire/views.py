@@ -9,12 +9,18 @@ from django.db.models.functions import ExtractMonth
 from django.db.models import Count
 from datetime import datetime
 
+from django.views.generic import View
 
 class HomePageView(ListView):
     model = Locations
     context_object_name = 'home'
     template_name = "home.html"
 
+class ChartView(View):
+    def get(self, request, *args, **kwargs):
+        # Your view logic here
+        pass
+    
 def get_queryset(self, *args, **kwargs):
         pass
 
