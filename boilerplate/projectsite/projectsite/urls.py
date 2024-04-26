@@ -1,8 +1,8 @@
-from fire.views import ChartView
 from django.contrib import admin
 from django.urls import path
 
 from fire.views import HomePageView, ChartView, PieCountbySeverity, LineCountbyMonth, MultilineIncidentTop3Country, multipleBarbySeverity
+
 
 urlpatterns = [
     
