@@ -3,7 +3,6 @@ from django.contrib import admin
 from django.urls import path
 
 from fire.views import HomePageView, ChartView, PieCountbySeverity, LineCountbyMonth, MultilineIncidentTop3Country, multipleBarbySeverity
-from fire import views
 
 urlpatterns = [
     
