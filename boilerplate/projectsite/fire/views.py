@@ -8,18 +8,23 @@ from django.db.models.functions import ExtractMonth
 
 from django.db.models import Count
 from datetime import datetime
-from django.views.generic.base import TemplateView
 
-class ChartView(TemplateView):
-    template_name = 'chart.html'
 
 class HomePageView(ListView):
     model = Locations
     context_object_name = 'home'
     template_name = "home.html"
     
-def get_queryset(self, *args, **kwargs):
+class ChartView(ListView):
+    template_name = 'chart.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        return context
+
+    def get_queryset(self, *args, **kwargs):
         pass
+
 
 def PieCountbySeverity(request):
     query = '''
