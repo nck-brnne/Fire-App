@@ -1,0 +1,61 @@
+{% extends 'base.html' %} 
+{% load static %} 
+{% block content %}
+
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+
+<div class="page-inner">
+  <div class="page-header">
+    <h4 class="page-title">Fire Incidents Map</h4>
+  </div>
+  <div class="row">
+    <div class="col-md-4">
+      <form method="GET">
+        <select name="city" class="form-control" onchange="this.form.submit()">
+          <option value="">All Cities</option>
+          {% for city in cities %}
+            <option value="{{ city }}" {% if selected_city == city %}selected{% endif %}>{{ city }}</option>
+          {% endfor %}
+        </select>
+      </form>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-12">
+      <div id="map" style="width: 100%; height: 500px;"></div>
+    </div>
+  </div>
+</div>
+
+<script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+<script>
+  var map = L.map('map').setView([9.81644, 118.72239], 6);
+  
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+  }).addTo(map);
+
+  // Define the marker icon for fire incidents
+  var fireIcon = L.icon({
+    iconUrl: '{% static "fireheart.png" %}',  // Replace with the path to your fire incident icon
+    iconSize: [50, 50], // Adjust the size as needed
+  });
+
+  // Define the marker data
+  var fireIncidents = {{ fire_incidents|safe }};
+
+  // Loop through the marker data and create markers
+  fireIncidents.forEach(function (data) {
+      var latitude = parseFloat(data.latitude);
+      var longitude = parseFloat(data.longitude);
+
+      var marker = L.marker([latitude, longitude], {icon: fireIcon}).addTo(map);
+
+      // Create a popup and set its content
+      var popupContent = "<b>City:</b> " + data.city + "<br><b>Incident:</b> " + data.incident_type;
+      var popup = L.popup().setContent(popupContent);
+
+      marker.bindPopup(popupContent);
+  });
+</script>
+{% endblock %}
