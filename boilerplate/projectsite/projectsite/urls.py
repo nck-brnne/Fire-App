@@ -13,8 +13,8 @@ urlpatterns = [
     path('lineChart/', LineCountbyMonth, name='chart'),
     path('multilineChart/', MultilineIncidentTop3Country, name='chart'),
     path('multiBarChart/', multipleBarbySeverity, name='chart'),
-    path('stations/', map_station, name='map-station'),  # 
-    path('fire-incidents-map/', fire_incident_map, name='fire_incident_map'),
+    path('stations/', map_station, name='map-station'),  
+    path('fire_incident_map/', fire_incident_map, name='fire-incidents-map'),
 
 
 ]

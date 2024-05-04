@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.views.generic.list import ListView
-from fire.models import Locations, Incident, FireStation, FireIncident 
+from fire.models import Locations, Incident, FireStation
 
 from django.db import connection
 from django.http import JsonResponse
@@ -187,19 +187,18 @@ def map_station(request):
      }
 
      return render(request, 'map_station.html', context)
-
+ 
 def fire_incident_map(request):
-    selected_city = request.GET.get('city', '')
-    cities = FireIncident.objects.values_list('city', flat=True).distinct()
-    
-    if selected_city:
-        fire_incidents = FireIncident.objects.filter(city=selected_city)
-    else:
-        fire_incidents = FireIncident.objects.all()
-    
+    fireIncidents = Locations.objects.values('name', 'latitude', 'longitude')
+
+    for fs in fireIncidents:
+        fs['latitude'] = float(fs['latitude'])
+        fs['longitude'] = float(fs['longitude'])
+
+    fireIncidents_list = list(fireIncidents)  # Corrected variable name
+
     context = {
-        'cities': cities,
-        'selected_city': selected_city,
-        'fire_incidents': fire_incidents
+        'fireIncidents': fireIncidents_list,  # Corrected variable name
     }
+
     return render(request, 'fire_incident_map.html', context)
