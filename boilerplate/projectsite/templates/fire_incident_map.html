@@ -1,0 +1,116 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+<style>
+
+#city-select {
+    width: 150px; /* Adjust width as needed */
+  }
+
+#map {
+  width: 100%;
+  height: 65vh;
+  border-radius: 10px;
+  border-top: 5px solid rgb(108, 23, 235); /* Change the color here */
+  border-bottom: 5px solid rgb(108, 23, 235); /* Change the color here */
+  position: relative;
+  outline: none;
+}
+</style>
+<div class="page-inner">
+  <div class="page-header">
+    <h4 class="page-title">Dashboard</h4>
+    <ul class="breadcrumbs">
+      <li class="nav-home">
+        <a href="#">
+          <i class="flaticon-home"></i>
+        </a>
+      </li>
+      <li class="separator">
+        <i class="flaticon-right-arrow"></i>
+      </li>
+      <li class="nav-item">
+        <a href="#">Maps</a>
+      </li>
+      <li class="separator">
+        <i class="flaticon-right-arrow"></i>
+      </li>
+      <li class="nav-item">
+        <a href="#">Stations</a>
+      </li>
+    </ul>
+  </div>
+  <div class="row">
+    <div class="col-md-12">
+      <div class="card card-transparent">
+        <div class="card-header">
+          <h4 class="card-title text-center">Fire Incidents</h4>
+          <p class="card-category text-center">Categorize by city and explore incidents. Developed by our partners at <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>.</p>
+        </div>
+        <div class="card-body">
+          <div class="col-md-12">
+            <!-- Dropdown for selecting city and Go button -->
+            <div class="dropdown-container">
+              <select id="city-select" style="border-radius: 5px; border-top: 3px solid rgb(114, 150, 228); background-color: aliceblue;">
+                <option value="" selected disabled>Select City</option>
+                <!-- Dropdown options will be populated dynamically -->
+              </select>
+              <button id="goButton" type="submit" style="border-radius: 5px; border: none; background-color: rgb(54, 124, 255); color: white;">Go</button>
+            </div>
+            <div id="map" style="width: 100%; height: 400px"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+<script>
+  // Initialize the map
+  var map = L.map('map').setView([9.81644, 118.72239], 13);
+  var fireIcon = L.icon({
+      iconUrl: '../static/img/fireheart.png', // Replace with the path to your red marker icon
+      iconSize: [50, 50], // Adjust the size as needed
+  });
+  
+  // Load the tile layer from OpenStreetMap
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+  }).addTo(map);
+  
+  
+  // Function to set city on Go button click
+  document.getElementById("goButton").addEventListener("click", function() {
+      var citySelect = document.getElementById("city-select");
+      var selectedCity = citySelect.options[citySelect.selectedIndex].text;
+  
+      // Make an AJAX request to fetch data from the Django view
+      var xhr = new XMLHttpRequest();
+      xhr.onreadystatechange = function() {
+          if (xhr.readyState === XMLHttpRequest.DONE) {
+              if (xhr.status === 200) {
+                  // Parse the JSON response
+                  var data = JSON.parse(xhr.responseText);
+  
+                  // Logic to handle the data, for example, adding markers to the map
+                  data.forEach(function(item) {
+                      var latitude = parseFloat(item.latitude);
+                      var longitude = parseFloat(item.longitude);
+                      var marker = L.marker([latitude, longitude], { icon: fireIcon }).addTo(map);
+                      marker.bindPopup(item.name);
+                  });
+              } else {
+                  console.error('Error fetching data:', xhr.status);
+              }
+          }
+      };
+  
+      // Send a GET request to your Django view URL
+      xhr.open('GET', '/fire-incidents-map/?city=' + encodeURIComponent(selectedCity));
+      xhr.send();
+  });
+  
+</script>
+{% endblock %}

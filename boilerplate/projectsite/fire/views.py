@@ -188,13 +188,18 @@ def map_station(request):
 
      return render(request, 'map_station.html', context)
 
-def fire_incidents(request):
-    cities = FireIncident.objects.values_list('city', flat=True).distinct()  # Get unique city names
-    if 'city' in request.GET:
-        selected_city = request.GET['city']
+def fire_incident_map(request):
+    selected_city = request.GET.get('city', '')
+    cities = FireIncident.objects.values_list('city', flat=True).distinct()
+    
+    if selected_city:
         fire_incidents = FireIncident.objects.filter(city=selected_city)
     else:
-        selected_city = None
         fire_incidents = FireIncident.objects.all()
     
-    return render(request, 'fire_incidents.html', {'fire_incidents': fire_incidents, 'cities': cities, 'selected_city': selected_city})
+    context = {
+        'cities': cities,
+        'selected_city': selected_city,
+        'fire_incidents': fire_incidents
+    }
+    return render(request, 'fire_incident_map.html', context)

@@ -74,9 +74,13 @@ class WeatherConditions(BaseModel):
     weather_description = models.CharField(max_length=150)
 
 
+
 class FireIncident(models.Model):
-    city = models.CharField(max_length=100)
-    incident_type = models.CharField(max_length=100)
-    latitude = models.FloatField()
-    longitude = models.FloatField()
-    # Add other fields as needed
+    name = models.CharField(max_length=150)
+    latitude = models.DecimalField(
+        max_digits=22, decimal_places=16, null=True, blank=True)
+    longitude = models.DecimalField(
+        max_digits=22, decimal_places=16, null=True, blank=True)
+    address = models.CharField(max_length=150)
+    city = models.CharField(max_length=150)
+    country = models.CharField(max_length=150)
