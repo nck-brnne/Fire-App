@@ -15,6 +15,7 @@ urlpatterns = [
     path('multiBarChart/', multipleBarbySeverity, name='chart'),
     path('stations/', map_station, name='map-station'),  
     path('fire_incident_map/', fire_incident_map, name='fire-incidents-map'),
-
+    
+   
 
 ]

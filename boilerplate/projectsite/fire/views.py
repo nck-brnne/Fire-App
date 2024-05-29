@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from django.views.generic.list import ListView
+from django.views.generic.list import ListView 
 from fire.models import Locations, Incident, FireStation
 
 from django.db import connection
@@ -202,3 +202,10 @@ def fire_incident_map(request):
     }
 
     return render(request, 'fire_incident_map.html', context)
+
+def firestation_list(request):
+    firestations = FireStation.objects.all()
+    return render(request, 'stationlist.html', {'object_list': firestations})
+
+
+
