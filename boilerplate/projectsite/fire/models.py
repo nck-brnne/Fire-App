@@ -74,4 +74,3 @@ class WeatherConditions(BaseModel):
     weather_description = models.CharField(max_length=150)
 
 
-
