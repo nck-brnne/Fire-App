@@ -219,6 +219,7 @@ class firestationListView(ListView):
     model = FireStation
     template_name = 'station_list.html'
     context_object_name = 'object_list'
+    paginate_by = 10
 
     def get_queryset(self, *args, **kwargs):
         qs = super().get_queryset(*args, **kwargs)
@@ -255,6 +256,7 @@ class IncidentListView(ListView):
     model = Incident
     template_name = 'incident_list.html'
     context_object_name = 'object_list'
+    paginate_by = 10
 
     def get_queryset(self, *args, **kwargs):
         qs = super().get_queryset(*args, **kwargs)
