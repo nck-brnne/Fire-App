@@ -1,8 +1,8 @@
 from django.shortcuts import render
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView
 from django.urls import reverse_lazy
-from fire.models import Locations, Incident, FireStation
-from fire.forms import Loc_Form, Incident_Form, FireStationzForm
+from fire.models import Locations, Incident, FireStation, WeatherConditions, FireTruck
+from fire.forms import Loc_Form, Incident_Form, FireStationzForm, Weather_condition, Firetruckform
 from django.db.models.query import QuerySet
 from django.db.models import Q
 
@@ -286,3 +286,112 @@ class IncidentDeleteView(DeleteView):
     model = Incident
     template_name= 'incident_del.html'
     success_url = reverse_lazy('incident-list')
+    
+class LocationListView(ListView):
+    model = Locations
+    template_name = 'loc_list.html'
+    context_object_name = 'object_list'
+    paginate_by = 10
+
+    def get_queryset(self, *args, **kwargs):
+        qs = super().get_queryset(*args, **kwargs)
+        query = self.request.GET.get("q")
+        if query:
+            qs = qs.filter(
+                Q(name__icontains=query) |
+                Q(address__icontains=query) |
+                Q(city__icontains=query) |
+                Q(country__icontains=query)
+            )
+        return qs
+    
+class LocationCreateView(CreateView):
+    model = Locations
+    form_class = Loc_Form
+    template_name= 'loc_add.html'
+    success_url = reverse_lazy('loc-list')
+    
+class LocationUpdateView(UpdateView):
+    model = Locations
+    form_class = Loc_Form
+    template_name= 'loc_edit.html'
+    success_url = reverse_lazy('loc-list')
+    
+class LocationDeleteView(DeleteView):
+    model = Locations
+    template_name= 'loc_del.html'
+    success_url = reverse_lazy('loc-list')
+
+class ConditionListView(ListView):
+    model = WeatherConditions
+    context_object_name = 'object_list'
+    template_name = 'weather_list.html'
+    paginate_by = 10
+
+    def get_queryset(self, *args, **kwargs):
+        qs = super(ConditionListView, self).get_queryset(*args, **kwargs)
+        query = self.request.GET.get('q')
+        if query:
+            qs = qs.filter(
+                Q(incident__location_name__icontains=query) | 
+                Q(temperature__icontains=query) |
+                Q(humidity__icontains=query) |
+                Q(wind_speed__icontains=query) |
+                Q(weather_description__icontains=query)
+            )
+        return qs
+    
+class ConditionCreateView(CreateView):
+    model = WeatherConditions
+    form_class = Weather_condition
+    template_name = 'weather_add.html'
+    success_url = reverse_lazy('weather-list')
+
+class ConditionUpdateView(UpdateView):
+    model = WeatherConditions
+    form_class = Weather_condition
+    template_name = 'weather_edit.html'
+    success_url = reverse_lazy('weather-list')
+
+class ConditionDeleteView(DeleteView):
+    model = WeatherConditions
+    template_name = 'weather_del.html'
+    success_url = reverse_lazy('weather-list')
+    
+    
+    
+class FiretruckListView(ListView):
+    model = FireTruck
+    context_object_name = 'firetruck'
+    template_name = 'firetruck_list.html'
+    paginate_by = 10 
+    
+    
+    def get_queryset(self, *args, **kwargs):
+        qs = super().get_queryset(*args, **kwargs)
+        query = self.request.GET.get("q")
+        if query:
+            qs = qs.filter(Q(truck_number__icontains=query) | 
+              Q(model__icontains=query) | 
+              Q(capacity__icontains=query) | 
+              Q(station__name__icontains=query))
+
+        return qs
+
+class FiretruckCreateView(CreateView):
+    model = FireTruck
+    form_class = Firetruckform
+    template_name = 'firetruck_add.html'
+    success_url = reverse_lazy('fireTruck-list')
+
+class FiretruckUpdateView(UpdateView):
+    model = FireTruck
+    form_class = Firetruckform
+    template_name = 'firetruck_edit.html'
+    success_url = reverse_lazy('fireTruck-list')
+
+class FiretruckDeleteView(DeleteView):
+    model =  FireTruck
+    template_name = 'firetruck_del.html'
+    success_url = reverse_lazy('fireTruck-list')
+    
