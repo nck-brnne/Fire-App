@@ -33,7 +33,8 @@ class Incident(BaseModel):
     description = models.CharField(max_length=250)
     
     def __str__(self):
-        return self.location
+        return f"Incident at {self.location.name} - {self.severity_level} on {self.date_time}"
+
 
 class FireStation(BaseModel):
     name = models.CharField(max_length=150)
@@ -47,22 +48,7 @@ class FireStation(BaseModel):
     def __str__(self):
         return self.name
 
-class Firefighters(BaseModel):
-    XP_CHOICES = (
-        ('Probationary Firefighter', 'Probationary Firefighter'),
-        ('Firefighter I', 'Firefighter I'),
-        ('Firefighter II', 'Firefighter II'),
-        ('Firefighter III', 'Firefighter III'),
-        ('Driver', 'Driver'),
-        ('Captain', 'Captain'),
-        ('Battalion Chief', 'Battalion Chief'),)
-    name = models.CharField(max_length=150)
-    rank = models.CharField(max_length=150)
-    experience_level = models.CharField(max_length=150)
-    station = models.CharField(
-        max_length=45, null=True, blank=True, choices=XP_CHOICES)
-    def __str__(self):
-        return self.name
+
 
 class FireTruck(BaseModel):
     truck_number = models.CharField(max_length=150)
@@ -81,3 +67,21 @@ class WeatherConditions(BaseModel):
 
     def __str__(self):
         return f"WeatherCondition: {self.id}"
+    
+
+class Firefighters(BaseModel):
+    XP_CHOICES = (
+        ('Probationary Firefighter', 'Probationary Firefighter'),
+        ('Firefighter I', 'Firefighter I'),
+        ('Firefighter II', 'Firefighter II'),
+        ('Firefighter III', 'Firefighter III'),
+        ('Driver', 'Driver'),
+        ('Captain', 'Captain'),
+        ('Battalion Chief', 'Battalion Chief'),
+    )
+    name = models.CharField(max_length=150)
+    rank = models.CharField(max_length=150, null=True, blank=True)  # Make rank nullable
+    experience_level = models.CharField(max_length=150)
+
+    def __str__(self):
+        return self.name

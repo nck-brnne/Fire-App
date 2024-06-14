@@ -1,8 +1,8 @@
 from django.shortcuts import render
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView
 from django.urls import reverse_lazy
-from fire.models import Locations, Incident, FireStation, WeatherConditions, FireTruck
-from fire.forms import Loc_Form, Incident_Form, FireStationzForm, Weather_condition, Firetruckform
+from fire.models import Locations, Incident, FireStation, WeatherConditions, FireTruck, Firefighters
+from fire.forms import Loc_Form, Incident_Form, FireStationzForm, Weather_condition, Firetruckform, FirefightersForm
 from django.db.models.query import QuerySet
 from django.db.models import Q
 
@@ -333,7 +333,7 @@ class ConditionListView(ListView):
         query = self.request.GET.get('q')
         if query:
             qs = qs.filter(
-                Q(incident__location_name__icontains=query) | 
+                Q(incident__location__name__icontains=query) | 
                 Q(temperature__icontains=query) |
                 Q(humidity__icontains=query) |
                 Q(wind_speed__icontains=query) |
@@ -395,3 +395,35 @@ class FiretruckDeleteView(DeleteView):
     template_name = 'firetruck_del.html'
     success_url = reverse_lazy('fireTruck-list')
     
+    
+
+
+class FirefightersListView(ListView):
+    model = Firefighters
+    context_object_name = 'firefighters'
+    template_name = 'firefighter_list.html'
+    paginate_by = 10 
+    
+    def get_queryset(self, *args, **kwargs):
+        qs = super().get_queryset(*args, **kwargs)
+        query = self.request.GET.get("q")
+        if query:
+            qs = qs.filter(Q(name__icontains=query))
+        return qs
+
+class FirefightersCreateView(CreateView):
+    model = Firefighters
+    form_class = FirefightersForm
+    template_name = 'firefighter_add.html'
+    success_url = reverse_lazy('firefighters-list')
+
+class FirefightersUpdateView(UpdateView):
+    model = Firefighters
+    form_class = FirefightersForm
+    template_name = 'firefighter_edit.html'
+    success_url = reverse_lazy('firefighters-list')
+
+class FirefightersDeleteView(DeleteView):
+    model = Firefighters
+    template_name = 'firefighter_del.html'
+    success_url = reverse_lazy('firefighters-list')
