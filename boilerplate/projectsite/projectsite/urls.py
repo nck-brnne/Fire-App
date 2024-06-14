@@ -27,10 +27,10 @@ urlpatterns = [
     path('firestation_list/<pk>', firestationUpdateView.as_view(), name='firestation-update'),
     path('firestation_list/<pk>/delete/', firestationDeleteView.as_view(), name='firestation-delete'),
 
-    path('Incident_list/',  IncidentListView.as_view(), name='incident-list'),
-    path('Incident_list/add', IncidentCreateView.as_view(), name='incident-add'),
-    path('Incident_list/<pk>', IncidentUpdateView.as_view(), name='incident-update'),
-    path('Incident_list/<pk>/delete/', IncidentDeleteView.as_view(), name='incident-delete'),
+    path('incident_list/',  IncidentListView.as_view(), name='incident-list'),
+    path('incident_list/add', IncidentCreateView.as_view(), name='incident-add'),
+    path('incident_list/<pk>', IncidentUpdateView.as_view(), name='incident-update'),
+    path('incident_list/<pk>/delete/', IncidentDeleteView.as_view(), name='incident-delete'),
     
     path('location_list/',  LocationListView.as_view(), name='loc-list'),
     path('location_list/add', LocationCreateView.as_view(), name='location-add'),

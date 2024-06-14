@@ -8,15 +8,14 @@ class Loc_Form(ModelForm):
         fields = "__all__"
 
 class Incident_Form(ModelForm):
-    datetime = forms.DateField(
-        label="Incident Date",
-        widget=forms.DateInput(attrs={'class': 'form-control', 'type': 'date'})
+    date_time = forms.DateTimeField(
+        label="Incident Date & Time",
+        widget=forms.DateTimeInput(attrs={'class': 'form-control', 'type': 'datetime-local'})
     )
 
     class Meta:
         model = Incident
         fields = "__all__"
-
 
 class FireStationzForm(ModelForm):
     class Meta:
